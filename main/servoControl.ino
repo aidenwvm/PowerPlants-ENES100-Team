@@ -8,8 +8,9 @@ void liftArm(float angle)
   servoArm.writeMicroseconds(us);
 }
 
-void liftArm(float height)
+void liftArm(double height)
 {
   float angle = asin(height / 140);
   liftArm(angle);
 }
+
