@@ -57,6 +57,8 @@ void setup()
   //Serial.begin(9600);
 
   armServo.attach(37);
+  liftArmHeight(140);  //running a lil testy
+  driveForward(100);
   //tweezerServo.attach(9);
 
   //motorSetup(enLF, inLF1, inLF2);
@@ -108,8 +110,6 @@ void loop()
     }
   }
   */
-
-  liftArm(45);
 }
 
 /*
