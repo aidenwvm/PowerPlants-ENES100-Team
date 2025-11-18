@@ -5,7 +5,7 @@
 void liftArmAngle(float angle) //angle in degrees
 {
   float us = ((1325-1750)/(90-45))*(angle-90)+1325;
-  servoArm.writeMicroseconds(us);
+  armServo.writeMicroseconds(us);
 }
 
 void liftArmHeight(float height) //height in mm 
@@ -13,6 +13,7 @@ void liftArmHeight(float height) //height in mm
   float angle = asin(height / 140);
   liftArmAngle(angle);
 }
+
 
 
 
