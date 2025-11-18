@@ -114,16 +114,12 @@ void loop()
   */
 }
 
-/*
 void ultrasonicSetup(int trigPin, int echoPin)
 {
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
 }
-*/
 
-
-/*
 void orient()
 {
   //should probably add a check to see if would be quicker to orient right or left
@@ -136,7 +132,7 @@ void orient()
 
     else
     {
-      turnLeft()
+      turnLeft(100);
       delay(1);
       stop();
     }
@@ -154,4 +150,3 @@ int getDistance(int trigPin, int echoPin)
 
   return duration * 0.034 / 2;
 }
-*/
