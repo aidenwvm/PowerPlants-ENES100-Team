@@ -1,4 +1,4 @@
-#include <cmath>
+#include <math.h>
 
 //1325 = 90 degrees
 //1750 = 45 degrees
@@ -13,6 +13,7 @@ void liftArmHeight(float height) //height in mm
   float angle = asin(height / 140);
   liftArmAngle(angle);
 }
+
 
 
 
