@@ -59,6 +59,8 @@ void setup()
   armServo.attach(37);
   liftArmHeight(140);  //running a lil testy
   driveForward(100);
+  delay(3000);
+  stop();
   //tweezerServo.attach(9);
 
   //motorSetup(enLF, inLF1, inLF2);
