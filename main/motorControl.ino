@@ -12,7 +12,7 @@ void motorSetup(int en, int in1, int in2)
 
 void drive(float vx, float vy, float wz) // vx and vy in mm/s, wz in rad/s
 {
-  float r = 25; //wheel radius (mm)
+  float r = 25*(13.7/8.7); //wheel radius (mm) and "math to reality conversion ratio"
   float lx = 81; //distance from the center to the wheels in the x direction (mm)
   float ly = 91; //distance from the center to the wheels in the y direction (mm)
 
@@ -103,6 +103,7 @@ void stop()
   digitalWrite(inRR2, LOW);
 }
 
+
 //-----------------------------------------------------------------------------------------------------------------------
 
 
@@ -171,4 +172,3 @@ void backup(float speed)
   digitalWrite(inRR1, LOW);
   digitalWrite(inRR2, HIGH);
 }
-
