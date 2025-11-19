@@ -58,10 +58,15 @@ void setup()
 
   armServo.attach(37);
   liftArmHeight(140);  //running a lil testy
-  driveForward(100);
-  delay(3000);
+  
+  driveForward(200);
+  delay(1000);
   stop();
-  //tweezerServo.attach(9);
+  
+  /*
+  tweezerServo.attach(31);
+  tweezerServo.write(0);
+  */
 
   //motorSetup(enLF, inLF1, inLF2);
   //motorSetup(enLR, inLR1, inLR2);
@@ -114,12 +119,16 @@ void loop()
   */
 }
 
+/*
 void ultrasonicSetup(int trigPin, int echoPin)
 {
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
 }
+*/
 
+
+/*
 void orient()
 {
   //should probably add a check to see if would be quicker to orient right or left
@@ -132,7 +141,7 @@ void orient()
 
     else
     {
-      turnLeft(100);
+      turnLeft()
       delay(1);
       stop();
     }
@@ -150,3 +159,4 @@ int getDistance(int trigPin, int echoPin)
 
   return duration * 0.034 / 2;
 }
+*/

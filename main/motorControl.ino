@@ -8,15 +8,17 @@ void motorSetup(int en, int in1, int in2)
   digitalWrite(in2, LOW);
 }
 
-void setMotorSpeed(int speed)
+void setMotorSpeed(float speed)
 {
   analogWrite(enLF, speed);
   analogWrite(enLR, speed);
-  analogWrite(enRF, speed);
-  analogWrite(enRR, speed);
+  analogWrite(enRF, speed*1.05);
+  analogWrite(enRR, speed*1.05);
 }
 
-void driveForward(int speed)
+
+
+void driveForward(float speed)
 {
   setMotorSpeed(speed);
 
@@ -30,7 +32,7 @@ void driveForward(int speed)
   digitalWrite(inRR2, LOW);
 }
 
-void turnLeft(int speed)
+void turnLeft(float speed)
 {
   setMotorSpeed(speed);
   
@@ -44,7 +46,7 @@ void turnLeft(int speed)
   digitalWrite(inRR2, LOW);
 }
 
-void turnRight(int speed)
+void turnRight(float speed)
 {
   setMotorSpeed(speed);
   
@@ -72,7 +74,7 @@ void stop()
   digitalWrite(inRR2, LOW);
 }
 
-void backup(int speed)
+void backup(float speed)
 {
   setMotorSpeed(speed);
 

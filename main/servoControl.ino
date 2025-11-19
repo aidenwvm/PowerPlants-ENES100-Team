@@ -10,11 +10,9 @@ void liftArmAngle(float angle) //angle in degrees
 
 void liftArmHeight(float height) //height in mm 
 {
-  float angle = asin(height / 140);
+  float angle = (180/M_PI)*asin(height / 140);
   liftArmAngle(angle);
 }
-
-
 
 
 
