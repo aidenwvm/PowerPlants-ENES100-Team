@@ -16,13 +16,13 @@ void drive(float vx, float vy, float wz) // vx and vy in mm/s, wz in rad/s
   float lx = 81; //distance from the center to the wheels in the x direction (mm)
   float ly = 91; //distance from the center to the wheels in the y direction (mm)
 
-  BLA::Matrix<3> speedVector = {-vx,vy,wz}; //made vx negative since for whatever reason, this whole thing made left the positive x direction and that's not right
+  BLA::Matrix<3> speedVector = {vx,vy,wz};
   BLA::Matrix<4,3> conversionMatrix = 
     {
-      1,-1,-(lx+ly),
-      1,1,(lx+ly),
       1,1,-(lx+ly),
-      1,-1,(lx+ly)
+      -1,1,(lx+ly),
+      -1,1,-(lx+ly),
+      1,1,(lx+ly)
     };
   conversionMatrix *= (1/r);
   
@@ -171,3 +171,4 @@ void backup(float speed)
   digitalWrite(inRR1, LOW);
   digitalWrite(inRR2, HIGH);
 }
+
