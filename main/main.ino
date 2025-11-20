@@ -59,12 +59,10 @@ void setup()
   armServo.attach(37);
   liftArmHeight(140);  //running a lil testy
   
-  driveForward(200);
-  delay(1000);
-  stop();
-  
-  tweezerServo.attach(43);
+  /*
+  tweezerServo.attach(31);
   tweezerServo.write(0);
+  */
 
   //motorSetup(enLF, inLF1, inLF2);
   //motorSetup(enLR, inLR1, inLR2);
@@ -74,7 +72,7 @@ void setup()
   //orient();
 }
 
-
+float v = 0;
 void loop() 
 {
   //Enes100.print("X = "); Enes100.println(Enes100.getX());
@@ -158,3 +156,27 @@ int getDistance(int trigPin, int echoPin)
   return duration * 0.034 / 2;
 }
 */
+
+void movePlatformHeight(float height){ //note: this moves the OTV base at a constant speed, while the speed of the platform should vary; this means that for small heights, it could go very fast
+ if(height > armHeight){
+    direction = 1;
+    for(int i = armHeight, i++, i >= height)
+    {
+      liftArmHeight(armHeight+1);
+      float dDrive = sqrt(sq(140)-sq(armHeight-1))-sqrt(sq(140)-sq(armHeight)); //small distance to drive the OTV
+      driveDistance(0,dDrive,100,FALSE); //setting this to not stop should make it move smoother
+    }
+  } else if(height < armHeight)
+  {
+    for(int i = armHeight, i--, i <= height)
+    {
+      liftArmHeight(armHeight-1);
+      float dDrive = -sqrt(sq(140)-sq(armHeight-1))-sqrt(sq(140)-sq(armHeight)); //small distance to drive the OTV
+      driveDistance(0,dDrive,100,FALSE); //setting this to not stop should make it move smoother
+    }
+  } else {
+    break;
+  }
+  stop();
+  armHeight = height;
+}

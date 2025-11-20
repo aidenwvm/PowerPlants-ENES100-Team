@@ -86,6 +86,19 @@ void drive(float vx, float vy, float wz) // vx and vy in mm/s, wz in rad/s
   }
 }
 
+void driveDistance(float dx, float dy, float v,bool stop?) //stop? is useful for times where you want to move continuously
+{
+  float d = sqrt(sq(dx)+sq(dy));
+  float vx = v*dx/d;
+  float vy = v*dy/d;
+  drive(vx,vy,0);
+  delay(d*(1000/v));
+  if(stop?)
+  {
+    stop();
+  }
+}
+
 void stop()
 {
   analogWrite(enLF, 0);
@@ -102,7 +115,6 @@ void stop()
   digitalWrite(inRR1, LOW);
   digitalWrite(inRR2, LOW);
 }
-
 
 //-----------------------------------------------------------------------------------------------------------------------
 
