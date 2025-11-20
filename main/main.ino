@@ -87,29 +87,57 @@ void loop()
   //distanceRight = getDistance(trigPin2, echoPin2);
   //distanceLeft = getDistance(trigPin3, echoPin3);
 
+  //go to mission box
+  // while(distanceFront > 15)
+  // {
+  //    driveForward(100);
+  //    distanceFront = getDistance(trigPin1, echoPin1);
+  // }
 
-/*  //test to find actual threshold
-  if(distanceRight > 1 && distanceLeft > 1 && distanceFront > 10)
-  {
-    driveForward();
-  } 
+  //stop();
 
-  else if(distanceFront < 10 && distanceRight < distanceLeft)
+  //scoot left towards the wall until we're 5cm away
+  //500 ms of scooting travels about 25cm
+  while(distanceLeft > 5)
   {
-    while(Enes100.getTheta() > -pi/2)
+    goLeft(100);
+    distanceLeft = getDistance(trigPin3, echoPin3);
+    
+    if(distanceLeft < 5)
     {
-      turnLeft();
-      delay(1);
+      break;
     }
-  } 
+  }
 
-  else if (distanceFront < 10 && distanceLeft < distanceRight)
+  //drive forwards until 30cm away from bar
+  while(distanceFront > 30)
   {
-    while(Enes100.getTheta() < pi/2)
+    driveForward(100);
+    distanceFront = getDistance(trigPin1, echoPin1);
+
+    if(distanceFront < 30)
     {
-      turnRight();
-      delay(1)
+      break;
     }
+  }   
+
+  stop();
+
+  /*
+  //scoot right 50cm
+  while(distanceLeft < 50)
+  {
+     goRight(100);
+     distanceLeft = getDistance(trigPin3, echoPin3);
+  }
+
+  stop();
+
+  //drive under bar
+  while(distanceFront > 15)
+  {
+   driveForward(100);
+   distanceFront = getDistance(trigPin1, echoPin1);
   }
   */
 }
