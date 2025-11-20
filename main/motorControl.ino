@@ -12,17 +12,20 @@ void motorSetup(int en, int in1, int in2)
 
 void drive(float vx, float vy, float wz) // vx and vy in mm/s, wz in rad/s
 {
-  float r = 25*(13.7/8.7); //wheel radius (mm) and "math to reality conversion ratio"
+  float r = 25; //wheel radius (mm) and "math to reality conversion ratio"
+
   float lx = 81; //distance from the center to the wheels in the x direction (mm)
   float ly = 91; //distance from the center to the wheels in the y direction (mm)
+
+  float lFactor = 250; //a replacement for (lx+ly) in the original matrix, scaled to account for error when spinning around the z-axis
 
   BLA::Matrix<3> speedVector = {vx,vy,wz};
   BLA::Matrix<4,3> conversionMatrix = 
     {
-      1,1,-(lx+ly),
-      -1,1,(lx+ly),
-      -1,1,-(lx+ly),
-      1,1,(lx+ly)
+      1,1,-lFactor,
+      -1,1,lFactor,
+      -1,1,-lFactor,
+      1,1,lFactor
     };
   conversionMatrix *= (1/r);
   
@@ -42,7 +45,7 @@ void drive(float vx, float vy, float wz) // vx and vy in mm/s, wz in rad/s
   float sfr;
   float srl;
   float srr;
-  float wConversion = 255/(85*(2*M_PI/60)); //conversion multiplier between angular velocity and 0-255 range for analogWrite -- 85 is the max rpm of the motors
+  float wConversion = (8.7/13.7)*255/(85*(2*M_PI/60)); //conversion multiplier between angular velocity and 0-255 range for analogWrite -- 85 is the max rpm of the motors, (8.7/13.7) is an experimental conversion factor to get things right
   sfl = wConversion*wfl;
   sfr = wConversion*wfr;
   srl = wConversion*wrl;
@@ -184,4 +187,5 @@ void backup(float speed)
   digitalWrite(inRR1, LOW);
   digitalWrite(inRR2, HIGH);
 }
+
 
