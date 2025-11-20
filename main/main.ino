@@ -27,27 +27,33 @@ int currentSpeed;
 
 //Ultrasonics
 int distanceFront;
-const int trigPin1 = 11;
-const int echoPin1 = 12;
+const int trigPin1 = 53;
+const int echoPin1 = 52;
 
 int distanceRight;
 const int trigPin2 = 20;
 const int echoPin2 = 21;
 
 int distanceLeft;
-const int trigPin3 = 25;
-const int echoPin3 = 26;
+const int trigPin3 = 53;
+const int echoPin3 = 52;
 
 //Servos
 Servo armServo;
 int posArmServo = 2100;
+float armHeight; //stores last height written to servo
 
 Servo tweezerServo;
 int posTweezerServo = 0;
 
+//Force probe
+int forceProbeSensor = A0;
+
 
 void setup() 
 {
+  Serial.begin(9600);
+
   //Enes100.begin("Simulator", SEEDPLANTING, 065, 1116, 8, 9);
   //Enes100.println("Connected...");
 
@@ -57,7 +63,7 @@ void setup()
   //Serial.begin(9600);
 
   armServo.attach(37);
-  liftArmHeight(140);  //running a lil testy
+  liftArmHeight(140);
   
   /*
   tweezerServo.attach(31);
@@ -70,10 +76,36 @@ void setup()
   //motorSetup(enRR, inRR1, inRR2);
 
   //orient();
+
+  
+
+  //scoot left towards the wall until we're 5cm away
+  //500 ms of scooting travels about 25cm
+  /*
+  do
+  {
+    goLeft(100);
+    distanceLeft = getDistance(trigPin3, echoPin3);
+    Serial.println(distanceLeft);
+  } while(distanceLeft > 5);
+
+  //drive forwards until 30cm away from bar
+  while(distanceFront > 30)
+  {
+    driveForward(100);
+    distanceFront = getDistance(trigPin1, echoPin1);
+  }   
+
+  stop();
+  */
 }
 
 void loop() 
 {
+  distanceLeft = getDistance(trigPin1, echoPin1);
+  Serial.println(int(distanceLeft));
+
+
   //Enes100.print("X = "); Enes100.println(Enes100.getX());
   //Enes100.print("Y = "); Enes100.println(Enes100.getY());
   //Enes100.print("Theta = "); Enes100.println(Enes100.getTheta());
@@ -87,59 +119,33 @@ void loop()
   //distanceRight = getDistance(trigPin2, echoPin2);
   //distanceLeft = getDistance(trigPin3, echoPin3);
 
-  //go to mission box
-  // while(distanceFront > 15)
-  // {
-  //    driveForward(100);
-  //    distanceFront = getDistance(trigPin1, echoPin1);
-  // }
 
-  //stop();
-
-  //scoot left towards the wall until we're 5cm away
-  //500 ms of scooting travels about 25cm
-  while(distanceLeft > 5)
+/*  //test to find actual threshold
+  if(distanceRight > 1 && distanceLeft > 1 && distanceFront > 10)
   {
-    goLeft(100);
-    distanceLeft = getDistance(trigPin3, echoPin3);
-    
-    if(distanceLeft < 5)
+    driveForward();
+  } 
+
+  else if(distanceFront < 10 && distanceRight < distanceLeft)
+  {
+    while(Enes100.getTheta() > -pi/2)
     {
-      break;
+      turnLeft();
+      delay(1);
     }
-  }
+  } 
 
-  //drive forwards until 30cm away from bar
-  while(distanceFront > 30)
+  else if (distanceFront < 10 && distanceLeft < distanceRight)
   {
-    driveForward(100);
-    distanceFront = getDistance(trigPin1, echoPin1);
-
-    if(distanceFront < 30)
+    while(Enes100.getTheta() < pi/2)
     {
-      break;
+      turnRight();
+      delay(1)
     }
-  }   
-
-  stop();
-
-  /*
-  //scoot right 50cm
-  while(distanceLeft < 50)
-  {
-     goRight(100);
-     distanceLeft = getDistance(trigPin3, echoPin3);
-  }
-
-  stop();
-
-  //drive under bar
-  while(distanceFront > 15)
-  {
-   driveForward(100);
-   distanceFront = getDistance(trigPin1, echoPin1);
   }
   */
+
+
 }
 
 /*
@@ -170,8 +176,9 @@ void orient()
     }
   }
 }
+*/
 
-int getDistance(int trigPin, int echoPin)
+float getDistance(int trigPin, int echoPin)
 {
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -182,27 +189,25 @@ int getDistance(int trigPin, int echoPin)
 
   return duration * 0.034 / 2;
 }
-*/
 
-void movePlatformHeight(float height){ //note: this moves the OTV base at a constant speed, while the speed of the platform should vary; this means that for small heights, it could go very fast
+
+void movePlatformHeight(float height) //note: this moves the OTV base at a constant speed, while the speed of the platform should vary; this means that for small heights, it could go very fast
+{
  if(height > armHeight){
-    direction = 1;
-    for(int i = armHeight, i++, i >= height)
+    for(int i = armHeight; i < height; i++)
     {
       liftArmHeight(armHeight+1);
       float dDrive = sqrt(sq(140)-sq(armHeight-1))-sqrt(sq(140)-sq(armHeight)); //small distance to drive the OTV
-      driveDistance(0,dDrive,100,FALSE); //setting this to not stop should make it move smoother
+      driveDistance(0,dDrive,50,false); //setting this to not stop should make it move smoother
     }
   } else if(height < armHeight)
   {
-    for(int i = armHeight, i--, i <= height)
+    for(int i = armHeight; i > height; i--)
     {
       liftArmHeight(armHeight-1);
       float dDrive = -sqrt(sq(140)-sq(armHeight-1))-sqrt(sq(140)-sq(armHeight)); //small distance to drive the OTV
-      driveDistance(0,dDrive,100,FALSE); //setting this to not stop should make it move smoother
+      driveDistance(0,dDrive,50,false); //setting this to not stop should make it move smoother
     }
-  } else {
-    break;
   }
   stop();
   armHeight = height;

@@ -1,6 +1,5 @@
 #include <math.h>
 
-float armHeight; //stores last height written to servo
 //1325ms = 90 degrees
 //1750ms = 45 degrees
 void liftArmAngle(float angle) //angle in degrees

@@ -89,14 +89,14 @@ void drive(float vx, float vy, float wz) // vx and vy in mm/s, wz in rad/s
   }
 }
 
-void driveDistance(float dx, float dy, float v,bool stop?) //stop? is useful for times where you want to move continuously
+void driveDistance(float dx, float dy, float v,bool halt) //stop is useful for times where you want to move continuously
 {
   float d = sqrt(sq(dx)+sq(dy));
   float vx = v*dx/d;
   float vy = v*dy/d;
   drive(vx,vy,0);
   delay(d*(1000/v));
-  if(stop?)
+  if(halt)
   {
     stop();
   }
@@ -146,20 +146,6 @@ void driveForward(float speed)
   digitalWrite(inRR2, LOW);
 }
 
-void goRight(float speed)
-{
-  setMotorSpeed(speed);
-  
-  digitalWrite(inLF1, HIGH);
-  digitalWrite(inLF2, LOW);
-  digitalWrite(inLR1, LOW);
-  digitalWrite(inLR2, HIGH);
-  digitalWrite(inRF1, LOW);
-  digitalWrite(inRF2, HIGH);
-  digitalWrite(inRR1, HIGH);
-  digitalWrite(inRR2, LOW);
-}
-
 void goLeft(float speed)
 {
   setMotorSpeed(speed);
@@ -172,6 +158,20 @@ void goLeft(float speed)
   digitalWrite(inLF2, HIGH);
   digitalWrite(inLR1, HIGH);
   digitalWrite(inLR2, LOW);
+}
+
+void goRight(float speed)
+{
+  setMotorSpeed(speed);
+  
+  digitalWrite(inLF1, HIGH);
+  digitalWrite(inLF2, LOW);
+  digitalWrite(inLR1, LOW);
+  digitalWrite(inLR2, HIGH);
+  digitalWrite(inRF1, LOW);
+  digitalWrite(inRF2, HIGH);
+  digitalWrite(inRR1, HIGH);
+  digitalWrite(inRR2, LOW);
 }
 
 void backup(float speed)
@@ -187,5 +187,3 @@ void backup(float speed)
   digitalWrite(inRR1, LOW);
   digitalWrite(inRR2, HIGH);
 }
-
-
