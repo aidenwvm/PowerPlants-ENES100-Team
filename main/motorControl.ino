@@ -143,7 +143,7 @@ void driveForward(float speed)
   digitalWrite(inRR2, LOW);
 }
 
-void turnLeft(float speed)
+void goRight(float speed)
 {
   setMotorSpeed(speed);
   
@@ -157,7 +157,7 @@ void turnLeft(float speed)
   digitalWrite(inRR2, LOW);
 }
 
-void turnRight(float speed)
+void goLeft(float speed)
 {
   setMotorSpeed(speed);
   
@@ -184,3 +184,4 @@ void backup(float speed)
   digitalWrite(inRR1, LOW);
   digitalWrite(inRR2, HIGH);
 }
+
