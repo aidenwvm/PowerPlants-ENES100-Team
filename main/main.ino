@@ -41,7 +41,8 @@ const int echoPin3 = 52;
 //Servos
 Servo armServo;
 int posArmServo = 2100;
-float armHeight; //stores last height written to servo
+float armAngle = 90; //stores last angle written to servo
+float armHeight = 140; //stores last height written to servo
 
 Servo tweezerServo;
 int posTweezerServo = 0;
@@ -62,13 +63,16 @@ void setup()
   //ultrasonicSetup(trigPin3, echoPin3);
   //Serial.begin(9600);
 
+  tweezerServo.attach(43);
+  tweezerServo.write(90);
   armServo.attach(37);
-  liftArmHeight(140);
-  
-  /*
-  tweezerServo.attach(31);
-  tweezerServo.write(0);
-  */
+  liftArmAngle(90);
+  delay(1000);
+  liftArmAngle(30);
+  delay(500);
+  tweezerServo.write(80);
+  delay(500);
+  liftArmHeight(90,30);
 
   //motorSetup(enLF, inLF1, inLF2);
   //motorSetup(enLR, inLR1, inLR2);
@@ -102,10 +106,6 @@ void setup()
 
 void loop() 
 {
-  distanceLeft = getDistance(trigPin1, echoPin1);
-  Serial.println(int(distanceLeft));
-
-
   //Enes100.print("X = "); Enes100.println(Enes100.getX());
   //Enes100.print("Y = "); Enes100.println(Enes100.getY());
   //Enes100.print("Theta = "); Enes100.println(Enes100.getTheta());
@@ -144,8 +144,6 @@ void loop()
     }
   }
   */
-
-
 }
 
 /*
@@ -191,6 +189,8 @@ float getDistance(int trigPin, int echoPin)
 }
 
 
+// BAD VV DOES NOT WORK DO NOT USE RAHHHHH
+/*
 void movePlatformHeight(float height) //note: this moves the OTV base at a constant speed, while the speed of the platform should vary; this means that for small heights, it could go very fast
 {
  if(height > armHeight){
@@ -198,7 +198,7 @@ void movePlatformHeight(float height) //note: this moves the OTV base at a const
     {
       liftArmHeight(armHeight+1);
       float dDrive = sqrt(sq(140)-sq(armHeight-1))-sqrt(sq(140)-sq(armHeight)); //small distance to drive the OTV
-      driveDistance(0,dDrive,50,false); //setting this to not stop should make it move smoother
+      driveDistance(0,dDrive,150,false); //setting this to not stop should make it move smoother
     }
   } else if(height < armHeight)
   {
@@ -206,9 +206,10 @@ void movePlatformHeight(float height) //note: this moves the OTV base at a const
     {
       liftArmHeight(armHeight-1);
       float dDrive = -sqrt(sq(140)-sq(armHeight-1))-sqrt(sq(140)-sq(armHeight)); //small distance to drive the OTV
-      driveDistance(0,dDrive,50,false); //setting this to not stop should make it move smoother
+      driveDistance(0,dDrive,150,false); //setting this to not stop should make it move smoother
     }
   }
   stop();
   armHeight = height;
 }
+*/

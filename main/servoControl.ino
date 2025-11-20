@@ -6,12 +6,30 @@ void liftArmAngle(float angle) //angle in degrees
 {
   float us = ((1325-1750)/(90-45))*(angle-90)+1325;
   armServo.writeMicroseconds(us);
+
+  armAngle = angle;
 }
 
-void liftArmHeight(float height) //height in mm 
+void liftArmHeight(float height, float speed) //height in mm, speed in deg/s 
 {
   float angle = (180/M_PI)*asin(height / 140);
-  liftArmAngle(angle);
+
+  if(angle > armAngle)
+  {
+    for(float i=armAngle;i<angle;i++)
+    {
+      liftArmAngle(armAngle+1);
+      delay(1000*1/speed);
+    }
+  } else if(angle < armAngle)
+  {
+    for(float i=armAngle;i>angle;i--)
+    {
+      liftArmAngle(armAngle-1);
+      delay(1000*1/speed);
+    }
+  }
+
   armHeight = height;
 }
 
