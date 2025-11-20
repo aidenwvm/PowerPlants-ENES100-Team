@@ -72,7 +72,6 @@ void setup()
   //orient();
 }
 
-float v = 0;
 void loop() 
 {
   //Enes100.print("X = "); Enes100.println(Enes100.getX());
