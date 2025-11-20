@@ -63,10 +63,8 @@ void setup()
   delay(1000);
   stop();
   
-  /*
-  tweezerServo.attach(31);
+  tweezerServo.attach(43);
   tweezerServo.write(0);
-  */
 
   //motorSetup(enLF, inLF1, inLF2);
   //motorSetup(enLR, inLR1, inLR2);
