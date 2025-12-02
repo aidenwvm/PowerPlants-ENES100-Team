@@ -79,13 +79,6 @@ void setup()
   tweezerServo.attach(43);
   tweezerServo.write(90);
   armServo.attach(37);
-  liftArmAngle(90);
-  delay(1000);
-  liftArmAngle(30);
-  delay(500);
-  tweezerServo.write(80);
-  delay(500);
-  liftArmHeight(90,30);
 
   //motorSetup(enLF, inLF1, inLF2);
   //motorSetup(enLR, inLR1, inLR2);
