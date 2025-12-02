@@ -50,6 +50,19 @@ int posTweezerServo = 0;
 //Force probe
 int forceProbeSensor = A0;
 
+enum BotState 
+{
+  ORIENT,
+  GO_TO_MISSIONSITE,
+  PERFORM_MISSION,
+  SCOOT_LEFT,
+  DRIVE_TO_BAR, 
+  SCOOT_RIGHT, 
+  DRIVE_UNDER,
+  MISSION_COMPLETE
+};
+
+BotState currentState = SCOOT_LEFT;
 
 void setup() 
 {
@@ -78,30 +91,6 @@ void setup()
   //motorSetup(enLR, inLR1, inLR2);
   //motorSetup(enRF, inRF1, inRF2);
   //motorSetup(enRR, inRR1, inRR2);
-
-  //orient();
-
-  
-
-  //scoot left towards the wall until we're 5cm away
-  //500 ms of scooting travels about 25cm
-  /*
-  do
-  {
-    goLeft(100);
-    distanceLeft = getDistance(trigPin3, echoPin3);
-    Serial.println(distanceLeft);
-  } while(distanceLeft > 5);
-
-  //drive forwards until 30cm away from bar
-  while(distanceFront > 30)
-  {
-    driveForward(100);
-    distanceFront = getDistance(trigPin1, echoPin1);
-  }   
-
-  stop();
-  */
 }
 
 void loop() 
@@ -110,40 +99,119 @@ void loop()
   //Enes100.print("Y = "); Enes100.println(Enes100.getY());
   //Enes100.print("Theta = "); Enes100.println(Enes100.getTheta());
 
-  //driveForward();
-  //turnLeft();
-  //delay(1000);
-  //stop();
-
   //distanceFront = getDistance(trigPin1, echoPin1);
   //distanceRight = getDistance(trigPin2, echoPin2);
   //distanceLeft = getDistance(trigPin3, echoPin3);
 
 
-/*  //test to find actual threshold
-  if(distanceRight > 1 && distanceLeft > 1 && distanceFront > 10)
+  switch(currentState)
   {
-    driveForward();
-  } 
+    case ORIENT:
 
-  else if(distanceFront < 10 && distanceRight < distanceLeft)
-  {
-    while(Enes100.getTheta() > -pi/2)
-    {
-      turnLeft();
-      delay(1);
-    }
-  } 
+    break;
 
-  else if (distanceFront < 10 && distanceLeft < distanceRight)
-  {
-    while(Enes100.getTheta() < pi/2)
-    {
-      turnRight();
-      delay(1)
-    }
+    //go to mission box
+    case GO_TO_MISSIONSITE:
+
+      if(distanceFront > 15)
+      {
+        driveForward(100);
+        distanceFront = getDistance(trigPin1, echoPin1);
+      }
+
+      else
+      {
+        stop();
+        currentState = PERFORM_MISSION;
+      }
+
+      break;
+
+    case PERFORM_MISSION:
+
+      // liftArmAngle(90);
+      // delay(1000);
+      // liftArmAngle(30);
+      // delay(500);
+      // tweezerServo.write(80);
+      // delay(500);
+      // liftArmHeight(90,30);
+
+      break;
+
+    //scoot left towards the wall until we're 5cm away
+    //500 ms of scooting travels about 25cm
+    case SCOOT_LEFT:
+
+      if(distanceLeft > 5 && distanceLeft != 0)
+      {
+        goLeft(100);
+        distanceLeft = getDistance(trigPin3, echoPin3);
+      }
+
+      else
+      {
+        stop();
+        currentState = DRIVE_TO_BAR;
+      }
+    
+      break;
+  
+    //drive forwards until 30cm away from bar
+    case DRIVE_TO_BAR:
+
+      if(distanceFront > 30)
+      {
+        driveForward(100);
+        distanceFront = getDistance(trigPin1, echoPin1);
+      }
+
+      else
+      {
+        stop();
+        currentState = SCOOT_RIGHT;
+      }
+
+      break;
+
+    //scoot right 50cm
+    case SCOOT_RIGHT:
+
+      if(distanceLeft < 50)
+      {
+        goRight(100);
+        distanceLeft = getDistance(trigPin3, echoPin3);
+      }
+
+      else
+      {
+        stop();
+        currentState = DRIVE_UNDER;
+      }
+
+      break;
+
+    //drive under bar
+    case DRIVE_UNDER: 
+
+      if(distanceFront > 15)
+      {
+        driveForward(100);
+        distanceFront = getDistance(trigPin1, echoPin1);
+      }
+
+      else
+      {
+        stop();
+        currentState = MISSION_COMPLETE;
+      }
+
+      break;
+
+    case MISSION_COMPLETE:
+
+      stop();
   }
-  */
 }
 
 /*
