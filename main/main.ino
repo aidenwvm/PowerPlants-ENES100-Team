@@ -22,8 +22,7 @@ int enRR = 8;
 int inRR1 = 9;
 int inRR2 = 10;
 
-int currentSpeed;
-
+int orzoBin = 0;
 
 //Ultrasonics
 int distanceFront;
