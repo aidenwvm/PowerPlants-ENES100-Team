@@ -22,29 +22,29 @@ int enRR = 8;
 int inRR1 = 9;
 int inRR2 = 10;
 
-int orzoBin = 0;
+int currentSpeed;
+
 
 //Ultrasonics
-int distanceFront;
-const int trigPin1 = 53;
-const int echoPin1 = 52;
+float distanceFront;
+const int trigPin1 = 28;
+const int echoPin1 = 29;
 
-int distanceRight;
-const int trigPin2 = 20;
-const int echoPin2 = 21;
+float distanceRight;
+const int trigPin2 = 51;
+const int echoPin2 = 50;
 
-int distanceLeft;
-const int trigPin3 = 53;
-const int echoPin3 = 52;
+float distanceLeft;
+const int trigPin3 = 46;
+const int echoPin3 = 47;
 
 //Servos
 Servo armServo;
-int posArmServo = 2100;
 float armAngle = 90; //stores last angle written to servo
-float armHeight = 140; //stores last height written to servo
+float armHeight = 140;
 
 Servo tweezerServo;
-int posTweezerServo = 0;
+float tweezerAngle = 90;
 
 //Force probe
 int forceProbeSensor = A0;
@@ -67,17 +67,22 @@ void setup()
 {
   Serial.begin(9600);
 
-  //Enes100.begin("Simulator", SEEDPLANTING, 065, 1116, 8, 9);
-  //Enes100.println("Connected...");
+  //Enes100.begin("PowerPlants", SEED, 595, 1201, A8, A9);
+  //Enes100.println("PowerPlants connected");
 
-  //ultrasonicSetup(trigPin1, echoPin2);
-  //ultrasonicSetup(trigPin2, echoPin2);
-  //ultrasonicSetup(trigPin3, echoPin3);
-  //Serial.begin(9600);
+  ultrasonicSetup(trigPin1, echoPin1);
+  ultrasonicSetup(trigPin2, echoPin2);
+  ultrasonicSetup(trigPin3, echoPin3);
 
   tweezerServo.attach(43);
   tweezerServo.write(90);
   armServo.attach(37);
+  
+  armServo.write(90);
+  delay(1000);
+  float forceTest = testProbe();
+  Serial.print("Max force: ");
+  Serial.println(forceTest);
 
   //motorSetup(enLF, inLF1, inLF2);
   //motorSetup(enLR, inLR1, inLR2);
@@ -87,121 +92,112 @@ void setup()
 
 void loop() 
 {
+  //display data on vision system monitor
   //Enes100.print("X = "); Enes100.println(Enes100.getX());
   //Enes100.print("Y = "); Enes100.println(Enes100.getY());
   //Enes100.print("Theta = "); Enes100.println(Enes100.getTheta());
 
+  //get ultrasonic data
   //distanceFront = getDistance(trigPin1, echoPin1);
   //distanceRight = getDistance(trigPin2, echoPin2);
   //distanceLeft = getDistance(trigPin3, echoPin3);
+  //delay(10); //delay to protect ultrasonics
 
-
+  /*
+  //run current navigation/mission step
   switch(currentState)
   {
+    //orient towards mission box
     case ORIENT:
-
-    break;
+      orient();
+      break;
 
     //go to mission box
     case GO_TO_MISSIONSITE:
-
       if(distanceFront > 15)
       {
         driveForward(100);
         distanceFront = getDistance(trigPin1, echoPin1);
       }
-
       else
       {
         stop();
         currentState = PERFORM_MISSION;
       }
-
       break;
 
+    //analyze box for plantable substrate, plant seed, recover rock sample
     case PERFORM_MISSION:
-
-      // liftArmAngle(90);
-      // delay(1000);
-      // liftArmAngle(30);
-      // delay(500);
-      // tweezerServo.write(80);
-      // delay(500);
-      // liftArmHeight(90,30);
-
       break;
+
+    //NEED TO ADD REORIENTATION STEP
 
     //scoot left towards the wall until we're 5cm away
     //500 ms of scooting travels about 25cm
     case SCOOT_LEFT:
-
       if(distanceLeft > 5 && distanceLeft != 0)
       {
         goLeft(100);
         distanceLeft = getDistance(trigPin3, echoPin3);
       }
-
       else
       {
         stop();
         currentState = DRIVE_TO_BAR;
       }
-    
       break;
   
     //drive forwards until 30cm away from bar
     case DRIVE_TO_BAR:
-  
-      driveForward(100);
-      delay(19000);
-      stop();
-      currentState = SCOOT_RIGHT;
-
+      if(distanceFront > 30)
+      {
+        driveForward(100);
+        distanceFront = getDistance(trigPin1, echoPin1);
+      }
+      else
+      {
+        stop();
+        currentState = SCOOT_RIGHT;
+      }
       break;
 
     //scoot right 50cm
     case SCOOT_RIGHT:
-
       if(distanceLeft < 50)
       {
         goRight(100);
         distanceLeft = getDistance(trigPin3, echoPin3);
       }
-
       else
       {
         stop();
         currentState = DRIVE_UNDER;
       }
-
       break;
 
     //drive under bar
     case DRIVE_UNDER: 
-
-      driveForward(100);
-      delay(6000);
-      stop();
-      currentState = MISSION_COMPLETE;
-
+      if(distanceFront > 15)
+      {
+        driveForward(100);
+        distanceFront = getDistance(trigPin1, echoPin1);
+      }
+      else
+      {
+        stop();
+        currentState = MISSION_COMPLETE;
+      }
       break;
 
     case MISSION_COMPLETE:
-
       stop();
+      break;
   }
+  */
 }
 
-/*
-void ultrasonicSetup(int trigPin, int echoPin)
-{
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-}
-*/
 
 
-/*
 void orient()
 {
   float theta = Enes100.getTheta();
@@ -227,13 +223,18 @@ void orient()
   {
     while(theta < -M_PI/2 + 0.03 || theta > -M_PI/2 - 0.03)
     {
-      drive(0, 0, 1);
+      turnLeft(100);
     }
   }
 
   stop();
 }
-*/
+
+void ultrasonicSetup(int trigPin, int echoPin)
+{
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
 
 float getDistance(int trigPin, int echoPin)
 {
@@ -246,29 +247,3 @@ float getDistance(int trigPin, int echoPin)
 
   return duration * 0.034 / 2;
 }
-
-
-// BAD VV DOES NOT WORK DO NOT USE RAHHHHH
-/*
-void movePlatformHeight(float height) //note: this moves the OTV base at a constant speed, while the speed of the platform should vary; this means that for small heights, it could go very fast
-{
- if(height > armHeight){
-    for(int i = armHeight; i < height; i++)
-    {
-      liftArmHeight(armHeight+1);
-      float dDrive = sqrt(sq(140)-sq(armHeight-1))-sqrt(sq(140)-sq(armHeight)); //small distance to drive the OTV
-      driveDistance(0,dDrive,150,false); //setting this to not stop should make it move smoother
-    }
-  } else if(height < armHeight)
-  {
-    for(int i = armHeight; i > height; i--)
-    {
-      liftArmHeight(armHeight-1);
-      float dDrive = -sqrt(sq(140)-sq(armHeight-1))-sqrt(sq(140)-sq(armHeight)); //small distance to drive the OTV
-      driveDistance(0,dDrive,150,false); //setting this to not stop should make it move smoother
-    }
-  }
-  stop();
-  armHeight = height;
-}
-*/

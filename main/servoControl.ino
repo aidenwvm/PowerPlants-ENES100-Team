@@ -1,5 +1,8 @@
 #include <math.h>
 
+//-----------------------
+//OUTDATED CODE VV
+
 //1325ms = 90 degrees
 //1750ms = 45 degrees
 void liftArmAngle(float angle) //angle in degrees
