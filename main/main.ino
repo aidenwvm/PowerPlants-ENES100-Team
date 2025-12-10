@@ -204,21 +204,34 @@ void ultrasonicSetup(int trigPin, int echoPin)
 /*
 void orient()
 {
-  //should probably add a check to see if would be quicker to orient right or left
-  while(Enes100.getTheta() > 0.05 || Enes100.getTheta() < -0.05)
-  {
-    if(Enes100.getTheta() > 0.2 || Enes100.getTheta() < -0.2)
-    {
-      stop();
-    }
+  float theta = Enes100.getTheta();
 
-    else
+  //imma assume the vision system works in radians
+  //assume xy plane
+  while(theta < 1.58)
+  {
+    turnLeft(50);
+    theta = Enes100.getTheta();
+    Enes100.println(theta);
+
+    if(theta < 1.60 && theta > 1.55)
     {
-      turnLeft()
-      delay(1);
       stop();
+      break;
     }
   }
+
+  distanceFront = getDistance(trigPin1, echoPin1);
+
+  if(distanceFront < 35)
+  {
+    while(theta < -M_PI/2 + 0.03 || theta > -M_PI/2 - 0.03)
+    {
+      drive(0, 0, 1);
+    }
+  }
+
+  stop();
 }
 */
 
