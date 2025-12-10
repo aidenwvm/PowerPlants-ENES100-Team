@@ -151,18 +151,11 @@ void loop()
   
     //drive forwards until 30cm away from bar
     case DRIVE_TO_BAR:
-
-      if(distanceFront > 30)
-      {
-        driveForward(100);
-        distanceFront = getDistance(trigPin1, echoPin1);
-      }
-
-      else
-      {
-        stop();
-        currentState = SCOOT_RIGHT;
-      }
+  
+      driveForward(100);
+      delay(19000);
+      stop();
+      currentState = SCOOT_RIGHT;
 
       break;
 
@@ -186,17 +179,10 @@ void loop()
     //drive under bar
     case DRIVE_UNDER: 
 
-      if(distanceFront > 15)
-      {
-        driveForward(100);
-        distanceFront = getDistance(trigPin1, echoPin1);
-      }
-
-      else
-      {
-        stop();
-        currentState = MISSION_COMPLETE;
-      }
+      driveForward(100);
+      delay(6000);
+      stop();
+      currentState = MISSION_COMPLETE;
 
       break;
 
