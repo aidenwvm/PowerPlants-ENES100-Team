@@ -118,6 +118,7 @@ void analyzeMissionBox() //returns which box to plant in [MUST BE RUN AFTER ALIG
   //need to move back to the front to prepare for planting
 }
 
+/*
 int runFPtest()
 {
   float force1 = 0;
@@ -252,3 +253,4 @@ int runFPtest()
     }
   }
 }
+*/
